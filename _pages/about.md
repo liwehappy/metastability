@@ -13,6 +13,7 @@ Previously, I worked as software engineer at CAMEO Communication,Inc. and receiv
 With right attitude, discipline, and methods, I believe every data enthusiasts out there can learn data science and make impacts for our society without related education background. Thus, by building this platform, hopefully I can reach out to those who also wants to break into this field and facilitate their progress of learning.
 
 ## Publication
-[^1]:YT Lin (2018) Enhancement of Selected Species in Nonthermal Atmospheric Pressure Plasma: Implications on Wound Healing Effects. IEEE Transactions on Plasma Science, 2018 DOI: 10.1109/TPS.2018.2867495
 
-![]({{site.baseurl}}/images/fusion_plasma.jpg "Photo by department of applied physics, Ghent University. Some rights reserved")
+YT Lin (2018) Enhancement of Selected Species in Nonthermal Atmospheric Pressure Plasma: Implications on Wound Healing Effects. IEEE Transactions on Plasma Science, 2018 DOI: 10.1109/TPS.2018.2867495
+
+![](/images/fusion_plasma.jpg "Photo by department of applied physics, Ghent University. Some rights reserved")
