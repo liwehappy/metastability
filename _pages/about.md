@@ -16,4 +16,4 @@ With right attitude, discipline, and methods, I believe every data enthusiasts o
 
 YT Lin (2018) Enhancement of Selected Species in Nonthermal Atmospheric Pressure Plasma: Implications on Wound Healing Effects. IEEE Transactions on Plasma Science, 2018 DOI: 10.1109/TPS.2018.2867495
 
-![](/images/fusion_plasma.jpg "Photo by department of applied physics, Ghent University. Some rights reserved")
+![There are also data science application for fusion plasma]({{site.baseurl}}/images/fusion_plasma.jpg "Photo by department of applied physics, Ghent University. Some rights reserved")
