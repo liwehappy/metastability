@@ -10,17 +10,17 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="A buttom-up pipeline to text classification with application of fake news prediction" />
 <meta property="og:description" content="A buttom-up pipeline to text classification with application of fake news prediction" />
-<link rel="canonical" href="https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/12/Fake-News-Classification.html" />
-<meta property="og:url" content="https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/12/Fake-News-Classification.html" />
+<link rel="canonical" href="https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/14/Fake-News-Classification.html" />
+<meta property="og:url" content="https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/14/Fake-News-Classification.html" />
 <meta property="og:site_name" content="metastability" />
 <meta property="og:image" content="https://liwehappy.github.io/metastability/images/fake_news.jpg" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-01-12T00:00:00-06:00" />
+<meta property="article:published_time" content="2022-01-14T00:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://liwehappy.github.io/metastability/images/fake_news.jpg" />
 <meta property="twitter:title" content="Fake News Prediction with EmbeddingBag and LSTM(Glove word Embedding)" />
 <script type="application/ld+json">
-{"headline":"Fake News Prediction with EmbeddingBag and LSTM(Glove word Embedding)","dateModified":"2022-01-12T00:00:00-06:00","url":"https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/12/Fake-News-Classification.html","datePublished":"2022-01-12T00:00:00-06:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/12/Fake-News-Classification.html"},"image":"https://liwehappy.github.io/metastability/images/fake_news.jpg","description":"A buttom-up pipeline to text classification with application of fake news prediction","@context":"https://schema.org"}</script>
+{"url":"https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/14/Fake-News-Classification.html","@type":"BlogPosting","headline":"Fake News Prediction with EmbeddingBag and LSTM(Glove word Embedding)","dateModified":"2022-01-14T00:00:00-06:00","datePublished":"2022-01-14T00:00:00-06:00","image":"https://liwehappy.github.io/metastability/images/fake_news.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://liwehappy.github.io/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/14/Fake-News-Classification.html"},"description":"A buttom-up pipeline to text classification with application of fake news prediction","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/metastability/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://liwehappy.github.io/metastability/feed.xml" title="metastability" /><link rel="shortcut icon" type="image/x-icon" href="/metastability/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -91,8 +91,8 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Fake News Prediction with EmbeddingBag and LSTM(Glove word Embedding)</h1><p class="page-description">A buttom-up pipeline to text classification with application of fake news prediction</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-01-12T00:00:00-06:00" itemprop="datePublished">
-        Jan 12, 2022
+    <h1 class="post-title p-name" itemprop="name headline">Fake News Prediction with EmbeddingBag and LSTM(Glove word Embedding)</h1><p class="page-description">A buttom-up pipeline to text classification with application of fake news prediction</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-01-14T00:00:00-06:00" itemprop="datePublished">
+        Jan 14, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
     
@@ -4061,7 +4061,7 @@ And there is a probability of 0.5579760670661926 to be a fake news
         theme="github-light"
         crossorigin="anonymous"
         async>
-</script><a class="u-url" href="/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/12/Fake-News-Classification.html" hidden></a>
+</script><a class="u-url" href="/metastability/jupyter/deep%20learning/tf-idf/text%20classification/lstm/glove/word%20embedding/pytorch/2022/01/14/Fake-News-Classification.html" hidden></a>
 </article>
 
       </div>
