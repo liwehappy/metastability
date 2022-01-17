@@ -97,7 +97,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      63 min read
+      62 min read
     
 </span></p>
 
@@ -1135,44 +1135,7 @@ Mulan's story, and name, were also influential in the establishment of the marti
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     def __init__(self, url, alg, num_sentences):</span>
-<span class="c1">#         assert isinstance(alg, list) == True, "Candidate algorithms are not list type"</span>
-<span class="c1">#         self.article = parse_article(download_article(url))</span>
-<span class="c1">#         self.raw_summary = ''.join(alg(self.article['text'], num_sentences))</span>
-<span class="c1">#         self.summary_alg = alg</span>
-<span class="c1">#         self.num_sentences = num_summary_sentence</span>
-<span class="c1">#         self.standard = self.article['first_paragraph']</span>
-
-<span class="c1">#     def rouge_score(self, n_gram):</span>
-<span class="c1">#         # rouge score can also be measured based on different length of ngrams</span>
-<span class="c1">#         scorer = rouge_scorer.RougeScorer([f'rouge{n_gram}'], use_stemmer=True)</span>
-<span class="c1">#         scores = scorer.score(self.standard, self.raw_summary)</span>
-<span class="c1">#         print(self.summary_alg.__name__ + ":")</span>
-<span class="c1">#         print_rouge_score(scores)</span>
-
-<span class="c1">#     def print_summary(self):</span>
-<span class="c1">#         print()</span>
-<span class="c1">#         print(*self.summary_alg(self.article['text'], self.num_sentences), sep='\n')</span>
-<span class="c1">#         print()</span>
-
-<span class="k">class</span> <span class="nc">TextSummarization</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TextSummarization</span><span class="p">():</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">alg</span><span class="p">,</span> <span class="n">num_sentences</span><span class="p">,</span> <span class="n">n_gram</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"Candidate algorithms are not list type"</span>
@@ -1185,19 +1148,14 @@ Mulan's story, and name, were also influential in the establishment of the marti
     <span class="k">def</span> <span class="nf">rouge_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_gram</span><span class="p">,</span> <span class="n">raw_summary</span><span class="p">,</span> <span class="n">best</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># rouge score can also be measured based on different length of ngrams</span>
         <span class="n">scorer</span> <span class="o">=</span> <span class="n">rouge_scorer</span><span class="o">.</span><span class="n">RougeScorer</span><span class="p">([</span><span class="sa">f</span><span class="s1">'rouge</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="si">}</span><span class="s1">'</span><span class="p">],</span> <span class="n">use_stemmer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># for summary, alg in self.raw_summary():</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">,</span> <span class="n">raw_summary</span><span class="p">)</span>
-        <span class="c1"># print(alg.__name__ + ":")</span>
-        <span class="c1"># set_trace()</span>
         <span class="k">if</span> <span class="n">best</span><span class="p">:</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fmeasure</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">'rouge</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">fmeasure</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">scores</span>
-        <span class="c1"># print_rouge_score(scores)</span>
 
     <span class="k">def</span> <span class="nf">raw_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># for alg in self.alg_list:</span>
         <span class="n">summaries</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">alg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span><span class="p">)),</span> <span class="n">alg</span><span class="p">)</span> <span class="k">for</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alg_list</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">summaries</span>
             
@@ -1217,7 +1175,6 @@ Mulan's story, and name, were also influential in the establishment of the marti
     <span class="k">def</span> <span class="nf">best_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">fmeasures</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rouge_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">best</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">summary</span><span class="p">,</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_summary</span><span class="p">()]</span>
         <span class="n">best_alg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alg_list</span><span class="p">[</span><span class="n">fmeasures</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">fmeasures</span><span class="p">))]</span>
-        <span class="c1"># print(best_alg.__name__ + ":")</span>
         <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">best_alg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
 </pre></div>
