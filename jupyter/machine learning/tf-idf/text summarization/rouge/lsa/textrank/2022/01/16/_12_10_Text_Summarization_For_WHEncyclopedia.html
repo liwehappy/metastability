@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Text Summarization for World History Encyclopedia(a website) | metastability</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Text Summarization for World History Encyclopedia(a website)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Practical approaches addressing text summarization from World History Encyclopedia website." />
+<meta property="og:description" content="Practical approaches addressing text summarization from World History Encyclopedia website." />
+<link rel="canonical" href="https://liwehappy.github.io/metastability/jupyter/machine%20learning/tf-idf/text%20summarization/rouge/lsa/textrank/2022/01/16/_12_10_Text_Summarization_For_WHEncyclopedia.html" />
+<meta property="og:url" content="https://liwehappy.github.io/metastability/jupyter/machine%20learning/tf-idf/text%20summarization/rouge/lsa/textrank/2022/01/16/_12_10_Text_Summarization_For_WHEncyclopedia.html" />
+<meta property="og:site_name" content="metastability" />
+<meta property="og:image" content="https://liwehappy.github.io/metastability/images/World_history_encyclopedia.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-01-16T00:00:00-06:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://liwehappy.github.io/metastability/images/World_history_encyclopedia.png" />
+<meta property="twitter:title" content="Text Summarization for World History Encyclopedia(a website)" />
+<script type="application/ld+json">
+{"url":"https://liwehappy.github.io/metastability/jupyter/machine%20learning/tf-idf/text%20summarization/rouge/lsa/textrank/2022/01/16/_12_10_Text_Summarization_For_WHEncyclopedia.html","@type":"BlogPosting","headline":"Text Summarization for World History Encyclopedia(a website)","dateModified":"2022-01-16T00:00:00-06:00","datePublished":"2022-01-16T00:00:00-06:00","image":"https://liwehappy.github.io/metastability/images/World_history_encyclopedia.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://liwehappy.github.io/metastability/jupyter/machine%20learning/tf-idf/text%20summarization/rouge/lsa/textrank/2022/01/16/_12_10_Text_Summarization_For_WHEncyclopedia.html"},"description":"Practical approaches addressing text summarization from World History Encyclopedia website.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metastability/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://liwehappy.github.io/metastability/feed.xml" title="metastability" /><link rel="shortcut icon" type="image/x-icon" href="/metastability/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/metastability/">metastability</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/metastability/about/">About Me</a><a class="page-link" href="/metastability/search/">Search</a><a class="page-link" href="/metastability/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Text Summarization for World History Encyclopedia(a website)</h1><p class="page-description">Practical approaches addressing text summarization from World History Encyclopedia website.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-01-16T00:00:00-06:00" itemprop="datePublished">
+        Jan 16, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      63 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/metastability/categories/#jupyter">jupyter</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#machine learning">machine learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#tf-idf">tf-idf</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#text summarization">text summarization</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#rouge">rouge</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#LSA">LSA</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/metastability/categories/#TextRank">TextRank</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/liwehappy/metastability/tree/master/_notebooks/2021_12_10_Text_Summarization_For_WHEncyclopedia.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/metastability/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/liwehappy/metastability/master?filepath=_notebooks%2F2021_12_10_Text_Summarization_For_WHEncyclopedia.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/metastability/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/liwehappy/metastability/blob/master/_notebooks/2021_12_10_Text_Summarization_For_WHEncyclopedia.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/metastability/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fliwehappy%2Fmetastability%2Fblob%2Fmaster%2F_notebooks%2F2021_12_10_Text_Summarization_For_WHEncyclopedia.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/metastability/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Tip-from-Practical-NLP-textbook">Tip from Practical NLP textbook </a></li>
+<li class="toc-entry toc-h1"><a href="#Text-Summarization">Text Summarization </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Data-pre-processing">Data pre-processing </a></li>
+<li class="toc-entry toc-h2"><a href="#Summarizing-text-using-topic-representation">Summarizing text using topic representation </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Baseline:-Identifying-important-sentences-with-sum-of-TF-IDF-values">Baseline: Identifying important sentences with sum of TF-IDF values </a></li>
+<li class="toc-entry toc-h3"><a href="#LSA-algorithm">LSA algorithm </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Summarizing-text-using-an-indicator-representation">Summarizing text using an indicator representation </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#TextRank-algorithm">TextRank algorithm </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Measuring-the-performance-of-Text-Summarization-methods(Rouge-Score)">Measuring the performance of Text Summarization methods(Rouge Score) </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Example-articles">Example articles </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Mulan:-The-Legend-Through-History">Mulan: The Legend Through History </a></li>
+<li class="toc-entry toc-h2"><a href="#Genghis-Khan">Genghis Khan </a></li>
+<li class="toc-entry toc-h2"><a href="#The-Iberian-Conquest-of-the-Americas">The Iberian Conquest of the Americas </a></li>
+<li class="toc-entry toc-h2"><a href="#Christmas-Through-the-Ages">Christmas Through the Ages </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Conclusion">Conclusion </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021_12_10_Text_Summarization_For_WHEncyclopedia.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install rouge_score
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Collecting rouge_score
+  Downloading rouge_score-0.0.4-py2.py3-none-any.whl (22 kB)
+Requirement already satisfied: absl-py in /usr/local/lib/python3.7/dist-packages (from rouge_score) (0.12.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.7/dist-packages (from rouge_score) (1.19.5)
+Requirement already satisfied: six&gt;=1.14.0 in /usr/local/lib/python3.7/dist-packages (from rouge_score) (1.15.0)
+Requirement already satisfied: nltk in /usr/local/lib/python3.7/dist-packages (from rouge_score) (3.2.5)
+Installing collected packages: rouge-score
+Successfully installed rouge-score-0.0.4
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">rouge_score</span> <span class="kn">import</span> <span class="n">rouge_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">tokenize</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">html</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">rouge_score</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Tip-from-Practical-NLP-textbook">
+<a class="anchor" href="#Tip-from-Practical-NLP-textbook" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tip from Practical NLP textbook<a class="anchor-link" href="#Tip-from-Practical-NLP-textbook"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Categories of common text summarization tasks:</p>
+<ul>
+<li>Extractive vs Abstractive summarization</li>
+<li>Query-focused vs query-independent summarization</li>
+<li>Single-document vs query-document summarization</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Most common case:</p>
+<ul>
+<li>Single document, query-independent, extractive summarizer.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Limitation:</p>
+<ul>
+<li>May need to be customized into your own use cases</li>
+<li>ROUGE method as a metric to evaluation summarization may also need to be customized for research prorblem.</li>
+<li>Summarization is sensitive to the size of the text given as input. A better approach would be run text summarization separately on different part of texts.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><font size="6">Incentive:</font></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Although being a well-rounded person is not an easy task, gaining more general knowledge outside of our professionals especially knowledge from world history sometimes could give us another perspective to perceive our world or have more empathy toward environments and people. By far the most effective way to be well-rounded person is by reading more books from a variety of genres. However, people nowadays can be distracted by their personal hardships and relatioships with others and therefore lack of time to read every book from beginning to end. As a result, we provide a life saver in this situation for anyone wants to learn some history from website <strong>World History Encyclopedia</strong>. In this notebook, we are going to further summarize these already abbreviated history articles from this website. This summarization will not only save your time from truely read the whole artilce but also quickly help you understand the whole articles (if you have time to read) by reading this summarization first.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Text-Summarization">
+<a class="anchor" href="#Text-Summarization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Text Summarization<a class="anchor-link" href="#Text-Summarization"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this notebook, we focus on extractive methods in text summarization.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-pre-processing">
+<a class="anchor" href="#Data-pre-processing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data pre-processing<a class="anchor-link" href="#Data-pre-processing"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="kn">import</span> <span class="n">parser</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">BASE_DIR</span> <span class="o">=</span> <span class="s1">'/content'</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">download_article</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="c1"># check if article already there</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">".html"</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">'world_history_encyclopedia'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">BASE_DIR</span><span class="si">}</span><span class="s2">/world_history_encyclopedia/"</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+      <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"w+"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+          <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">clean_article</span><span class="p">(</span><span class="n">soup_source</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">"(Sign up|news letter|</span><span class="se">\n</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="n">texts</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">soup_source</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'p'</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">'World History Encyclopedia'</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
+                <span class="n">texts</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">text</span> <span class="o">+</span> <span class="s1">' '</span>
+    <span class="k">return</span> <span class="n">texts</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">parse_article</span><span class="p">(</span><span class="n">article_file</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">article_file</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">'html.parser'</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">[</span><span class="s1">'headline'</span><span class="p">]</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">h1</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">r</span><span class="p">[</span><span class="s1">'first_paragraph'</span><span class="p">]</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">r</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_article</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">reprlib</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">reprlib</span><span class="o">.</span><span class="n">Repr</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">maxstring</span> <span class="o">=</span> <span class="mi">800</span>
+
+<span class="n">url1</span> <span class="o">=</span> <span class="s2">"https://www.worldhistory.org/article/1596/mulan-the-legend-through-history/"</span>
+<span class="n">article_name1</span> <span class="o">=</span> <span class="n">download_article</span><span class="p">(</span><span class="n">url1</span><span class="p">)</span>
+<span class="n">article1</span> <span class="o">=</span> <span class="n">parse_article</span><span class="p">(</span><span class="n">article_name1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">repr</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>"Mulan (“magnolia”) is a legendary character in Chinese literature who is best known in the modern day from the Disney filmed adaptations (1998, 2020). Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeed... Ja Quan) which combines tai chi with dance, Kung Fu, and other arts to create a unique form of self-defense and personal improvement. The discipline is intended to encourage the confidence, strength, and grace of Mulan in modern-day practitioners and is only one of the many examples of how the legend of Mulan continues to inspire people today, especially women, just as it has done in the past. "
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summarizing-text-using-topic-representation">
+<a class="anchor" href="#Summarizing-text-using-topic-representation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summarizing text using topic representation<a class="anchor-link" href="#Summarizing-text-using-topic-representation"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Topic representation methods distinguish important sentences by identifying topics of sentences through important words.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Baseline:-Identifying-important-sentences-with-sum-of-TF-IDF-values">
+<a class="anchor" href="#Baseline:-Identifying-important-sentences-with-sum-of-TF-IDF-values" aria-hidden="true"><span class="octicon octicon-link"></span></a>Baseline: Identifying important sentences with sum of TF-IDF values<a class="anchor-link" href="#Baseline:-Identifying-important-sentences-with-sum-of-TF-IDF-values"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this simple technique, we sum over the tf-idf vectors of each sentence to determine if we include this setence to be our part of our summaries.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">tokenize</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'punkt'</span><span class="p">)</span>
+
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">sent_tokenize</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">])</span>
+<span class="n">tfidfVectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+<span class="n">words_tfidf</span> <span class="o">=</span> <span class="n">tfidfVectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[nltk_data] Downloading package punkt to /root/nltk_data...
+[nltk_data]   Unzipping tokenizers/punkt.zip.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_summary_sentence</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Sort the sentences in descending order by the sum of TF-IDF values</span>
+<span class="n">sent_sum</span> <span class="o">=</span> <span class="n">words_tfidf</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">important_sent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">sent_sum</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Print three most important sentences in the order they appear in the article</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">important_sent</span><span class="p">[:</span><span class="n">num_summary_sentence</span><span class="p">]:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.
+The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.
+The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.
+In the Disney films, she is revealed as a woman but perseveres against the prohibition on females serving in the army to go beyond what is expected of her in defeating China's enemies; in the original version, where she serves 12 years, her gender is never questioned, and she only reveals herself at the end, much to the surprise of the men who served with her.
+The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).
+The author's choice of this time period and this threat is intentional to appeal to the historically literate of his audience since, in 386 CE in Northern Wei, there was unrest caused by rebels and bandits of the south and the Kingdom of Northern Wei did actually issue a call to arms and conscription.
+In the first act, she explains her situation, goes out and buys equipment, and then unbinds her feet (a practice which was unknown in the actual Northern Wei Period but would have been familiar to Xu Wei's audience) as the most telling detail of her transformation from female to male.
+Hua Hu is thus sent home, still as a man, in the company of her two fellow soldiers, to await the new appointment…As she travels with the soldiers, they comment on how strange it is that they have never seen Hua Hu use the toilet [Hua Hu responds with an allusion to the moon goddess whose face frequently changes and true self is unknown]…Returning home, Hua Hu first reapplies female makeup, then greets her family.
+The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.
+Among these women is Xun Guan of the Western Jin Dynasty (265-316 CE), the 13-year-old daughter of governor Xun Song, who led a hand-picked team of soldiers to break the lines of the enemy forces surrounding her father's city and brought back a relief force to lift the siege.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">tokenize</span>
+
+<span class="k">def</span> <span class="nf">tfidf_summary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+    <span class="n">summary_sentence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sentences</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">sent_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">tfidfVectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+    <span class="n">words_tfidf</span> <span class="o">=</span> <span class="n">tfidfVectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+    <span class="n">sentence_sum</span> <span class="o">=</span> <span class="n">words_tfidf</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">important_sentences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">sentence_sum</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">important_sentences</span><span class="p">[:</span><span class="n">num_summary_sentence</span><span class="p">]:</span>
+            <span class="n">summary_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">summary_sentence</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Tf-IDF method:"</span><span class="p">)</span>
+<span class="n">tfidf_summary</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Tf-IDF method:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>["Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.",
+ "The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.",
+ "The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.",
+ "In the Disney films, she is revealed as a woman but perseveres against the prohibition on females serving in the army to go beyond what is expected of her in defeating China's enemies; in the original version, where she serves 12 years, her gender is never questioned, and she only reveals herself at the end, much to the surprise of the men who served with her.",
+ 'The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).',
+ "The author's choice of this time period and this threat is intentional to appeal to the historically literate of his audience since, in 386 CE in Northern Wei, there was unrest caused by rebels and bandits of the south and the Kingdom of Northern Wei did actually issue a call to arms and conscription.",
+ "In the first act, she explains her situation, goes out and buys equipment, and then unbinds her feet (a practice which was unknown in the actual Northern Wei Period but would have been familiar to Xu Wei's audience) as the most telling detail of her transformation from female to male.",
+ 'Hua Hu is thus sent home, still as a man, in the company of her two fellow soldiers, to await the new appointment…As she travels with the soldiers, they comment on how strange it is that they have never seen Hua Hu use the toilet [Hua Hu responds with an allusion to the moon goddess whose face frequently changes and true self is unknown]…Returning home, Hua Hu first reapplies female makeup, then greets her family.',
+ 'The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.',
+ "Among these women is Xun Guan of the Western Jin Dynasty (265-316 CE), the 13-year-old daughter of governor Xun Song, who led a hand-picked team of soldiers to break the lines of the enemy forces surrounding her father's city and brought back a relief force to lift the siege."]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="LSA-algorithm">
+<a class="anchor" href="#LSA-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>LSA algorithm<a class="anchor-link" href="#LSA-algorithm"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>LSA essentiallu perform SVD technique from linear algebra to simply the original term frequency sentence matrix into matrices with essence of the article.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install sumy
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Collecting sumy
+  Downloading sumy-0.9.0-py2.py3-none-any.whl (87 kB)
+     |████████████████████████████████| 87 kB 3.1 MB/s 
+Requirement already satisfied: nltk&gt;=3.0.2 in /usr/local/lib/python3.7/dist-packages (from sumy) (3.2.5)
+Collecting pycountry&gt;=18.2.23
+  Downloading pycountry-22.1.10.tar.gz (10.1 MB)
+     |████████████████████████████████| 10.1 MB 12.0 MB/s 
+Requirement already satisfied: requests&gt;=2.7.0 in /usr/local/lib/python3.7/dist-packages (from sumy) (2.23.0)
+Collecting breadability&gt;=0.1.20
+  Downloading breadability-0.1.20.tar.gz (32 kB)
+Requirement already satisfied: docopt&lt;0.7,&gt;=0.6.1 in /usr/local/lib/python3.7/dist-packages (from sumy) (0.6.2)
+Requirement already satisfied: chardet in /usr/local/lib/python3.7/dist-packages (from breadability&gt;=0.1.20-&gt;sumy) (3.0.4)
+Requirement already satisfied: lxml&gt;=2.0 in /usr/local/lib/python3.7/dist-packages (from breadability&gt;=0.1.20-&gt;sumy) (4.2.6)
+Requirement already satisfied: six in /usr/local/lib/python3.7/dist-packages (from nltk&gt;=3.0.2-&gt;sumy) (1.15.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.7/dist-packages (from pycountry&gt;=18.2.23-&gt;sumy) (57.4.0)
+Requirement already satisfied: idna&lt;3,&gt;=2.5 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.7.0-&gt;sumy) (2.10)
+Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.7.0-&gt;sumy) (1.24.3)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.7.0-&gt;sumy) (2021.10.8)
+Building wheels for collected packages: breadability, pycountry
+  Building wheel for breadability (setup.py) ... done
+  Created wheel for breadability: filename=breadability-0.1.20-py2.py3-none-any.whl size=21712 sha256=8c2efe92297f4a16b1794c0ff890d3c3f7c78eb61d303e8da90d0b3908e3bebc
+  Stored in directory: /root/.cache/pip/wheels/d4/bf/51/81d27ad638e1a6dca4f362ecc33d1e2c764b8ea7ec751b8fc1
+  Building wheel for pycountry (setup.py) ... done
+  Created wheel for pycountry: filename=pycountry-22.1.10-py2.py3-none-any.whl size=10595784 sha256=515490ffd056d86e68b7a5ff280929df98706deb708b59d51a2df07a3e43486f
+  Stored in directory: /root/.cache/pip/wheels/f7/8f/9c/b070d7376caf2beb0685bf72578106b2fd57019ed57d84f126
+Successfully built breadability pycountry
+Installing collected packages: pycountry, breadability, sumy
+Successfully installed breadability-0.1.20 pycountry-22.1.10 sumy-0.9.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sumy.parsers.plaintext</span> <span class="kn">import</span> <span class="n">PlaintextParser</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.tokenizers</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.stemmers</span> <span class="kn">import</span> <span class="n">Stemmer</span>
+<span class="kn">from</span> <span class="nn">sumy.utils</span> <span class="kn">import</span> <span class="n">get_stop_words</span>
+
+<span class="kn">from</span> <span class="nn">sumy.summarizers.lsa</span> <span class="kn">import</span> <span class="n">LsaSummarizer</span>
+
+<span class="n">LANGUAGE</span> <span class="o">=</span> <span class="s2">"english"</span>
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">Stemmer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">PlaintextParser</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">))</span>
+
+<span class="n">summarizer</span> <span class="o">=</span> <span class="n">LsaSummarizer</span><span class="p">(</span><span class="n">stemmer</span><span class="p">)</span>
+<span class="n">summarizer</span><span class="o">.</span><span class="n">stop_words</span> <span class="o">=</span> <span class="n">get_stop_words</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.
+Scholarly consensus is that Mulan is a fictional character, probably developed in Northern China in response to the greater independence women enjoyed there, whose legend was then revised in succeeding eras to reflect the values and challenges of the times.
+The original work, The Poem of Mulan, dates to the 6th century CE and reflects the influences of Mongolian-Turkic peoples on the region with a focus on filial piety the central virtue and moral of the tale.
+By the time the character reached the modern era, through the film Mulan Joins the Army (1939), she was a staunch nationalist, driving out foreign invaders, and her earlier virtue of filial piety had been replaced by unwavering love for her country.
+Since the appearance of the 1998 Disney animated film, Mulan's story has grown in popularity and drawn attention to the other women, all historically attested, who took up arms for a cause they believed in throughout China's history.
+The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.
+The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.
+According to Shiamin and Idema, an opera Mu Lan Joins the Army was written in 1903 CE which sets the action in the Han Dynasty with the Xiongnu (a tribe of warriors often associated with the Huns) serving as the antagonists.
+This version tells the same story but with typically Disney additions of a comical talking dragon, sentient cricket, and seemingly self-aware horse and retains the happy ending of the reunion of Mulan with her father and family and the suggestion that she will marry the handsome commander she served with.
+The warrior woman Wong Cong'er (l. c. 1777-1798 CE) commanded the White Lotus Sect in the rebellion against the Qing Dynasty, leading an army of men and using guerilla tactics to achieve a number of significant victories.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sumy.parsers.plaintext</span> <span class="kn">import</span> <span class="n">PlaintextParser</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.tokenizers</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.stemmers</span> <span class="kn">import</span> <span class="n">Stemmer</span>
+<span class="kn">from</span> <span class="nn">sumy.utils</span> <span class="kn">import</span> <span class="n">get_stop_words</span>
+<span class="kn">from</span> <span class="nn">sumy.summarizers.lsa</span> <span class="kn">import</span> <span class="n">LsaSummarizer</span>
+
+<span class="k">def</span> <span class="nf">lsa_summary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+    <span class="n">summary_sentence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">LANGUAGE</span> <span class="o">=</span> <span class="s2">"english"</span>
+    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">Stemmer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">PlaintextParser</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">))</span>
+    <span class="n">summarizer</span> <span class="o">=</span> <span class="n">LsaSummarizer</span><span class="p">(</span><span class="n">stemmer</span><span class="p">)</span>
+    <span class="n">summarizer</span><span class="o">.</span><span class="n">stop_words</span> <span class="o">=</span> <span class="n">get_stop_words</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+        <span class="n">summary_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">summary_sentence</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"LSA Method:"</span><span class="p">)</span>
+<span class="n">lsa_summary</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>LSA Method:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>["Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.",
+ 'Scholarly consensus is that Mulan is a fictional character, probably developed in Northern China in response to the greater independence women enjoyed there, whose legend was then revised in succeeding eras to reflect the values and challenges of the times.',
+ 'The original work, The Poem of Mulan, dates to the 6th century CE and reflects the influences of Mongolian-Turkic peoples on the region with a focus on filial piety the central virtue and moral of the tale.',
+ 'By the time the character reached the modern era, through the film Mulan Joins the Army (1939), she was a staunch nationalist, driving out foreign invaders, and her earlier virtue of filial piety had been replaced by unwavering love for her country.',
+ "Since the appearance of the 1998 Disney animated film, Mulan's story has grown in popularity and drawn attention to the other women, all historically attested, who took up arms for a cause they believed in throughout China's history.",
+ 'The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.',
+ "The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.",
+ 'According to Shiamin and Idema, an opera Mu Lan Joins the Army was written in 1903 CE which sets the action in the Han Dynasty with the Xiongnu (a tribe of warriors often associated with the Huns) serving as the antagonists.',
+ 'This version tells the same story but with typically Disney additions of a comical talking dragon, sentient cricket, and seemingly self-aware horse and retains the happy ending of the reunion of Mulan with her father and family and the suggestion that she will marry the handsome commander she served with.',
+ "The warrior woman Wong Cong'er (l. c. 1777-1798 CE) commanded the White Lotus Sect in the rebellion against the Qing Dynasty, leading an army of men and using guerilla tactics to achieve a number of significant victories."]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summarizing-text-using-an-indicator-representation">
+<a class="anchor" href="#Summarizing-text-using-an-indicator-representation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summarizing text using an indicator representation<a class="anchor-link" href="#Summarizing-text-using-an-indicator-representation"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Basically, indicator representation technique create intermediate featuress between sentences to take into account their relationship instead of using only words in each sentence.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="TextRank-algorithm">
+<a class="anchor" href="#TextRank-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>TextRank algorithm<a class="anchor-link" href="#TextRank-algorithm"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>TextRank technique is inspired by Google's graph-based ranking algorithm. In the case of natural language text, the author of this technique build a graph associated with the text. Original paper can be found <a href="https://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf">here</a></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sumy.summarizers.text_rank</span> <span class="kn">import</span> <span class="n">TextRankSummarizer</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">PlaintextParser</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">))</span>
+<span class="n">summarizer</span> <span class="o">=</span> <span class="n">TextRankSummarizer</span><span class="p">(</span><span class="n">stemmer</span><span class="p">)</span>
+<span class="n">summarizer</span><span class="o">.</span><span class="n">stop_words</span> <span class="o">=</span> <span class="n">get_stop_words</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.
+The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.
+The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).
+There are no known versions of the Mulan story between the Tang Dynasty and the play The Female Mulan by the playwright Xu Wei (l. 1521-1593 CE) so it is assumed that Xu Wei drew on Guo Maoqian's work for his own.
+In this version, Mulan is the daughter of a Turkish father and Chinese mother and, when the Turkish khan conscripts her father, Mulan goes in his place.
+This same story is told, with significant differences, in The Story of the Loyal, Filial, and Heroic Mulan (also known as The Complete Account of Extraordinary Mulan, c. 1800 CE).
+The Mulan legend was first featured on film in China in 1939 in Mulan Joins the Army which presented her as an ardent nationalist whose zeal for her country and heroism shames her male comrades throughout her tour of duty.
+Mulan was featured, or alluded to, in other Chinese films afterwards but received international attention in 1998 with Disney's release of the animated feature film Mulan.
+The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.
+Mulan's story, and name, were also influential in the establishment of the martial art of Mulan Quan (also Mulan Hua Ja Quan) which combines tai chi with dance, Kung Fu, and other arts to create a unique form of self-defense and personal improvement.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sumy.parsers.plaintext</span> <span class="kn">import</span> <span class="n">PlaintextParser</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.tokenizers</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span> <span class="nn">sumy.nlp.stemmers</span> <span class="kn">import</span> <span class="n">Stemmer</span>
+<span class="kn">from</span> <span class="nn">sumy.utils</span> <span class="kn">import</span> <span class="n">get_stop_words</span>
+<span class="kn">from</span> <span class="nn">sumy.summarizers.text_rank</span> <span class="kn">import</span> <span class="n">TextRankSummarizer</span>
+
+<span class="k">def</span> <span class="nf">textrank_summary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+    <span class="n">summary_sentence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">LANGUAGE</span> <span class="o">=</span> <span class="s2">"english"</span>
+    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">Stemmer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">PlaintextParser</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">))</span>
+    <span class="n">summarizer</span> <span class="o">=</span> <span class="n">TextRankSummarizer</span><span class="p">(</span><span class="n">stemmer</span><span class="p">)</span>
+    <span class="n">summarizer</span><span class="o">.</span><span class="n">stop_words</span> <span class="o">=</span> <span class="n">get_stop_words</span><span class="p">(</span><span class="n">LANGUAGE</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">num_summary_sentence</span><span class="p">):</span>
+        <span class="n">summary_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">summary_sentence</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">textrank_summary</span><span class="p">(</span><span class="n">article1</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>["The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.",
+ 'The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.',
+ 'The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).',
+ "There are no known versions of the Mulan story between the Tang Dynasty and the play The Female Mulan by the playwright Xu Wei (l. 1521-1593 CE) so it is assumed that Xu Wei drew on Guo Maoqian's work for his own.",
+ 'In this version, Mulan is the daughter of a Turkish father and Chinese mother and, when the Turkish khan conscripts her father, Mulan goes in his place.',
+ 'This same story is told, with significant differences, in The Story of the Loyal, Filial, and Heroic Mulan (also known as The Complete Account of Extraordinary Mulan, c. 1800 CE).',
+ 'The Mulan legend was first featured on film in China in 1939 in Mulan Joins the Army which presented her as an ardent nationalist whose zeal for her country and heroism shames her male comrades throughout her tour of duty.',
+ "Mulan was featured, or alluded to, in other Chinese films afterwards but received international attention in 1998 with Disney's release of the animated feature film Mulan.",
+ 'The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.',
+ "Mulan's story, and name, were also influential in the establishment of the martial art of Mulan Quan (also Mulan Hua Ja Quan) which combines tai chi with dance, Kung Fu, and other arts to create a unique form of self-defense and personal improvement."]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Measuring-the-performance-of-Text-Summarization-methods(Rouge-Score)">
+<a class="anchor" href="#Measuring-the-performance-of-Text-Summarization-methods(Rouge-Score)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Measuring the performance of Text Summarization methods(Rouge Score)<a class="anchor-link" href="#Measuring-the-performance-of-Text-Summarization-methods(Rouge-Score)"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>ROUGE - Recall-Oriented Understudy for Gisting Evaluation, is a popular metrics for measuring the accuracy when dealing with langugage summarization or translation. Although ROUGE method can only measure syntactical matches rather than semantic similarities between words, it is still a very good tool at hand to handle summarization and machine translation tasks.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">print_rouge_score</span><span class="p">(</span><span class="n">rouge_score</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">rouge_score</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">'Precision:'</span><span class="p">,</span> <span class="s2">"</span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">precision</span><span class="p">),</span> <span class="s1">'Recall:'</span><span class="p">,</span> <span class="s2">"</span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">recall</span><span class="p">),</span> <span class="s1">'fmeasure:'</span><span class="p">,</span> <span class="s2">"</span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">fmeasure</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since we don't have human-generated summaries of these World History Encyclopedia articles, model evaluation below, we will use the first paragraph as the gist of each of articles from world history encyclopedia.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Example-articles">
+<a class="anchor" href="#Example-articles" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example articles<a class="anchor-link" href="#Example-articles"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     def __init__(self, url, alg, num_sentences):</span>
+<span class="c1">#         assert isinstance(alg, list) == True, "Candidate algorithms are not list type"</span>
+<span class="c1">#         self.article = parse_article(download_article(url))</span>
+<span class="c1">#         self.raw_summary = ''.join(alg(self.article['text'], num_sentences))</span>
+<span class="c1">#         self.summary_alg = alg</span>
+<span class="c1">#         self.num_sentences = num_summary_sentence</span>
+<span class="c1">#         self.standard = self.article['first_paragraph']</span>
+
+<span class="c1">#     def rouge_score(self, n_gram):</span>
+<span class="c1">#         # rouge score can also be measured based on different length of ngrams</span>
+<span class="c1">#         scorer = rouge_scorer.RougeScorer([f'rouge{n_gram}'], use_stemmer=True)</span>
+<span class="c1">#         scores = scorer.score(self.standard, self.raw_summary)</span>
+<span class="c1">#         print(self.summary_alg.__name__ + ":")</span>
+<span class="c1">#         print_rouge_score(scores)</span>
+
+<span class="c1">#     def print_summary(self):</span>
+<span class="c1">#         print()</span>
+<span class="c1">#         print(*self.summary_alg(self.article['text'], self.num_sentences), sep='\n')</span>
+<span class="c1">#         print()</span>
+
+<span class="k">class</span> <span class="nc">TextSummarization</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">alg</span><span class="p">,</span> <span class="n">num_sentences</span><span class="p">,</span> <span class="n">n_gram</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"Candidate algorithms are not list type"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">article</span> <span class="o">=</span> <span class="n">parse_article</span><span class="p">(</span><span class="n">download_article</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg_list</span> <span class="o">=</span> <span class="n">alg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ngram</span> <span class="o">=</span> <span class="n">n_gram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span> <span class="o">=</span> <span class="n">num_summary_sentence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'first_paragraph'</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">rouge_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_gram</span><span class="p">,</span> <span class="n">raw_summary</span><span class="p">,</span> <span class="n">best</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># rouge score can also be measured based on different length of ngrams</span>
+        <span class="n">scorer</span> <span class="o">=</span> <span class="n">rouge_scorer</span><span class="o">.</span><span class="n">RougeScorer</span><span class="p">([</span><span class="sa">f</span><span class="s1">'rouge</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="si">}</span><span class="s1">'</span><span class="p">],</span> <span class="n">use_stemmer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># for summary, alg in self.raw_summary():</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">,</span> <span class="n">raw_summary</span><span class="p">)</span>
+        <span class="c1"># print(alg.__name__ + ":")</span>
+        <span class="c1"># set_trace()</span>
+        <span class="k">if</span> <span class="n">best</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fmeasure</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">'rouge</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">fmeasure</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">scores</span>
+        <span class="c1"># print_rouge_score(scores)</span>
+
+    <span class="k">def</span> <span class="nf">raw_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># for alg in self.alg_list:</span>
+        <span class="n">summaries</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">alg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span><span class="p">)),</span> <span class="n">alg</span><span class="p">)</span> <span class="k">for</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alg_list</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">summaries</span>
+            
+
+    <span class="k">def</span> <span class="nf">print_summary_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">summaries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">summary</span><span class="p">,</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_summary</span><span class="p">():</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rouge_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="p">,</span> <span class="n">summary</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">summaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span><span class="p">))</span>
+            <span class="c1"># print()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Detail:"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">n</span><span class="p">:[</span><span class="n">sc</span><span class="p">,</span> <span class="n">su</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span> <span class="n">su</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">summaries</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">best_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fmeasures</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rouge_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ngram</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">best</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">summary</span><span class="p">,</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_summary</span><span class="p">()]</span>
+        <span class="n">best_alg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alg_list</span><span class="p">[</span><span class="n">fmeasures</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">fmeasures</span><span class="p">))]</span>
+        <span class="c1"># print(best_alg.__name__ + ":")</span>
+        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">best_alg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">article</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_sentences</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Mulan:-The-Legend-Through-History">
+<a class="anchor" href="#Mulan:-The-Legend-Through-History" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mulan: The Legend Through History<a class="anchor-link" href="#Mulan:-The-Legend-Through-History"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">curl</span> <span class="o">=</span> <span class="s1">'https://www.worldhistory.org/article/1596/mulan-the-legend-through-history/'</span>
+<span class="n">summaries</span> <span class="o">=</span> <span class="n">TextSummarization</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">[</span><span class="n">tfidf_summary</span><span class="p">,</span> <span class="n">lsa_summary</span><span class="p">,</span> <span class="n">textrank_summary</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">best_summary</span><span class="p">()</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">print_summary_detail</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.
+Scholarly consensus is that Mulan is a fictional character, probably developed in Northern China in response to the greater independence women enjoyed there, whose legend was then revised in succeeding eras to reflect the values and challenges of the times.
+The original work, The Poem of Mulan, dates to the 6th century CE and reflects the influences of Mongolian-Turkic peoples on the region with a focus on filial piety the central virtue and moral of the tale.
+By the time the character reached the modern era, through the film Mulan Joins the Army (1939), she was a staunch nationalist, driving out foreign invaders, and her earlier virtue of filial piety had been replaced by unwavering love for her country.
+Since the appearance of the 1998 Disney animated film, Mulan's story has grown in popularity and drawn attention to the other women, all historically attested, who took up arms for a cause they believed in throughout China's history.
+The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.
+The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.
+According to Shiamin and Idema, an opera Mu Lan Joins the Army was written in 1903 CE which sets the action in the Han Dynasty with the Xiongnu (a tribe of warriors often associated with the Huns) serving as the antagonists.
+This version tells the same story but with typically Disney additions of a comical talking dragon, sentient cricket, and seemingly self-aware horse and retains the happy ending of the reunion of Mulan with her father and family and the suggestion that she will marry the handsome commander she served with.
+The warrior woman Wong Cong'er (l. c. 1777-1798 CE) commanded the White Lotus Sect in the rebellion against the Qing Dynasty, leading an army of men and using guerilla tactics to achieve a number of significant victories.
+
+Detail:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'lsa_summary': [dict_items([('rouge2', Score(precision=0.07092198581560284, recall=0.6122448979591837, fmeasure=0.12711864406779663))]),
+  ["Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.",
+   'Scholarly consensus is that Mulan is a fictional character, probably developed in Northern China in response to the greater independence women enjoyed there, whose legend was then revised in succeeding eras to reflect the values and challenges of the times.',
+   'The original work, The Poem of Mulan, dates to the 6th century CE and reflects the influences of Mongolian-Turkic peoples on the region with a focus on filial piety the central virtue and moral of the tale.',
+   'By the time the character reached the modern era, through the film Mulan Joins the Army (1939), she was a staunch nationalist, driving out foreign invaders, and her earlier virtue of filial piety had been replaced by unwavering love for her country.',
+   "Since the appearance of the 1998 Disney animated film, Mulan's story has grown in popularity and drawn attention to the other women, all historically attested, who took up arms for a cause they believed in throughout China's history.",
+   'The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.',
+   "The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.",
+   'According to Shiamin and Idema, an opera Mu Lan Joins the Army was written in 1903 CE which sets the action in the Han Dynasty with the Xiongnu (a tribe of warriors often associated with the Huns) serving as the antagonists.',
+   'This version tells the same story but with typically Disney additions of a comical talking dragon, sentient cricket, and seemingly self-aware horse and retains the happy ending of the reunion of Mulan with her father and family and the suggestion that she will marry the handsome commander she served with.',
+   "The warrior woman Wong Cong'er (l. c. 1777-1798 CE) commanded the White Lotus Sect in the rebellion against the Qing Dynasty, leading an army of men and using guerilla tactics to achieve a number of significant victories."]],
+ 'textrank_summary': [dict_items([('rouge2', Score(precision=0.015625, recall=0.14285714285714285, fmeasure=0.028169014084507043))]),
+  ["The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.",
+   'The story, as it is best known today through the recent films, places Mulan in an unidentified era of Imperial China (221 BCE - 1912 CE), but the original poem is set during the Northern Wei Period.',
+   'The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).',
+   "There are no known versions of the Mulan story between the Tang Dynasty and the play The Female Mulan by the playwright Xu Wei (l. 1521-1593 CE) so it is assumed that Xu Wei drew on Guo Maoqian's work for his own.",
+   'In this version, Mulan is the daughter of a Turkish father and Chinese mother and, when the Turkish khan conscripts her father, Mulan goes in his place.',
+   'This same story is told, with significant differences, in The Story of the Loyal, Filial, and Heroic Mulan (also known as The Complete Account of Extraordinary Mulan, c. 1800 CE).',
+   'The Mulan legend was first featured on film in China in 1939 in Mulan Joins the Army which presented her as an ardent nationalist whose zeal for her country and heroism shames her male comrades throughout her tour of duty.',
+   "Mulan was featured, or alluded to, in other Chinese films afterwards but received international attention in 1998 with Disney's release of the animated feature film Mulan.",
+   'The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.',
+   "Mulan's story, and name, were also influential in the establishment of the martial art of Mulan Quan (also Mulan Hua Ja Quan) which combines tai chi with dance, Kung Fu, and other arts to create a unique form of self-defense and personal improvement."]],
+ 'tfidf_summary': [dict_items([('rouge2', Score(precision=0.04833333333333333, recall=0.5918367346938775, fmeasure=0.08936825885978429))]),
+  ["Her story, however, about a young girl who takes her father's place in the army to help save her country, is hundreds of years old The tale most likely originated in the Northern Wei Period (386-535 CE) of China before it was developed by succeeding authors.",
+   "The play The Female Mulan (16th century CE) modifies earlier themes, moves the action back to the time of the Northern Wei, and introduces the happy ending of the marriage motif while succeeding versions conclude with Mulan killing herself to avoid the shame of having to become the emperor's concubine until the story returned the conclusion of the joyful family reunion and marriage.",
+   "The modern and ancient versions follow basically the same plot of a young girl who takes her aged father's place in the army when he is called to serve, performs her duties admirably, saves her country, and returns home to her family where she is received with honor.",
+   "In the Disney films, she is revealed as a woman but perseveres against the prohibition on females serving in the army to go beyond what is expected of her in defeating China's enemies; in the original version, where she serves 12 years, her gender is never questioned, and she only reveals herself at the end, much to the surprise of the men who served with her.",
+   'The original poem takes place during the chaotic era between the fall of the Han Dynasty (202 BCE - 220 CE) and the rise of the Sui Dynasty (589-618 CE) during which China first split into the Period of the Three Kingdoms (220-280 CE) and was then ruled by succeeding short-lived dynasties, one of which was the Wei, which established itself during the period of the Northern and Southern Dynasties (386-589 CE).',
+   "The author's choice of this time period and this threat is intentional to appeal to the historically literate of his audience since, in 386 CE in Northern Wei, there was unrest caused by rebels and bandits of the south and the Kingdom of Northern Wei did actually issue a call to arms and conscription.",
+   "In the first act, she explains her situation, goes out and buys equipment, and then unbinds her feet (a practice which was unknown in the actual Northern Wei Period but would have been familiar to Xu Wei's audience) as the most telling detail of her transformation from female to male.",
+   'Hua Hu is thus sent home, still as a man, in the company of her two fellow soldiers, to await the new appointment…As she travels with the soldiers, they comment on how strange it is that they have never seen Hua Hu use the toilet [Hua Hu responds with an allusion to the moon goddess whose face frequently changes and true self is unknown]…Returning home, Hua Hu first reapplies female makeup, then greets her family.',
+   'The warrior woman Dou Xianniang also appears, combined with the “dark arts” aspect of The Story of the Loyal, Filial, and Heroic Mulan, to create an engaging character and the film works, drawing on many other aspects of the legend, to provide an audience with a new vision of the story instead of a simple remake of an earlier successful film.',
+   "Among these women is Xun Guan of the Western Jin Dynasty (265-316 CE), the 13-year-old daughter of governor Xun Song, who led a hand-picked team of soldiers to break the lines of the enemy forces surrounding her father's city and brought back a relief force to lift the siege."]]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Genghis-Khan">
+<a class="anchor" href="#Genghis-Khan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genghis Khan<a class="anchor-link" href="#Genghis-Khan"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">'https://www.worldhistory.org/Genghis_Khan/'</span>
+<span class="n">summaries</span> <span class="o">=</span> <span class="n">TextSummarization</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">[</span><span class="n">tfidf_summary</span><span class="p">,</span> <span class="n">lsa_summary</span><span class="p">,</span> <span class="n">textrank_summary</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">best_summary</span><span class="p">()</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">print_summary_detail</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Genghis Khan (aka Chinggis Khan) was the founder of the Mongol Empire which he ruled from 1206 until his death in 1227.
+Born Temujin, he acquired the title of Genghis Khan, likely meaning 'universal ruler’, after unifying the Mongol tribes.
+Genghis Khan had a fearsome reputation but he was an able administrator who introduced writing to the Mongols, created their first law code, promoted trade and granted religious freedom by permitting all religions to be freely practised anywhere in the Mongol world.
+Temujin's mother was called Hoelun and his father, Yisugei, who was a tribal leader, and he arranged for his son to marry Borte (aka Bortei), the daughter of another influential Mongol leader, Dei-secen, but before this plan could come to fruition, Temujin's father was poisoned by a rival.
+As his army swelled to ever greater proportions, Temujin defeated, over a period of ten years or so, such rivals as the Tartars, Kereyids, Naimans, and Merkids until a Mongol confederation met at a great conference or kurultai at the Kerulen river in 1206 and formally declared Temujin their leader.
+He was given the title of Genghis Khan which likely means 'universal' leader (the spelling in Mongol is Chinggis but 'Genghis' remains more familiar today and derives from medieval Arab scholars not having a ch in their language).
+The Jin State Genghis attacked the Jin state (aka Jurchen Jin Dynasty, 1115-1234) and the plain of the Yellow River in 1205, 1209, and 1211, the latter invasion consisting of two Mongol armies of 50,000 men each.
+Rather short-sightedly, the fourth player in this game of empires, the Chinese Song Dynasty (aka Sung, 960 - 1279), instead of allying with the Jin to create a useful buffer zone between themselves and the Mongols, allied with the Khan.
+1193), who made the following description of the Great Khan, by then already a legendary figure: A man of a tall stature, of vigorous build, robust in body, the hair on his face scanty and turned white, with cat's eyes, possessed of great energy, discernment, genius and understanding, awe-inspiring, a butcher, just, resolute, an overthrower of enemies, intrepid, sanguinary and cruel' (Tabakat-i Nasiri, c. 1260, quoted in Saunders, 63) Genghis Khan died on 18 August 1227 of an unknown illness, perhaps initially caused by falling from his horse while hunting a few months earlier.
+At the time, he was back in northwest China besieging the Xia state's capital, Zhongxing, and the news of the great leader's death was kept from the Mongol army until the city had capitulated and its inhabitants been slaughtered.
+
+Detail:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'lsa_summary': [dict_items([('rouge2', Score(precision=0.02522935779816514, recall=0.1896551724137931, fmeasure=0.04453441295546559))]),
+  ['Temujin proved unstoppable, though, and he managed to unify most of the different nomadic tribes which roamed the grasslands of central Asia, each one composed of different but related clans, by creating a web of alliances between them.',
+   "He was given the title of Genghis Khan which likely means 'universal' leader (the spelling in Mongol is Chinggis but 'Genghis' remains more familiar today and derives from medieval Arab scholars not having a ch in their language).",
+   'Another innovation was the development of a postal system where horse-riding couriers could quickly carry messages across long distances and who were provided with regular stations for food, rest, and a change of horse.',
+   'One Jin official, Yuan Haowen (1190-1257) wrote the following poem to describe the devastation of the Mongol invasion: White bones scattered like tangled hemp, how soon before mulberry and catalpa turn to dragon-sands?',
+   "(Ebrey, 237) To add to the Jin's woes, they were beset with internal problems such as chronic corruption emptying the state coffers, natural disasters, and assassinations of top officials, including Emperor Feidi in 1213.",
+   'Song China was now fully exposed from the north and weaker than ever, wracked as it was by internal political factions and hamstrung by an overly conservative foreign policy which meant that it was only a matter of time before the Mongols brought about its collapse, too.',
+   'The campaigns in Western Asia and the edge of Europe brought Genghis Khan and the Mongols to the attention of a different set of historians than the Chinese, notably the Persian Minhaj al-Siraj Juzjani (b.',
+   "1193), who made the following description of the Great Khan, by then already a legendary figure: A man of a tall stature, of vigorous build, robust in body, the hair on his face scanty and turned white, with cat's eyes, possessed of great energy, discernment, genius and understanding, awe-inspiring, a butcher, just, resolute, an overthrower of enemies, intrepid, sanguinary and cruel' (Tabakat-i Nasiri, c. 1260, quoted in Saunders, 63) Genghis Khan died on 18 August 1227 of an unknown illness, perhaps initially caused by falling from his horse while hunting a few months earlier.",
+   "At the time, he was back in northwest China besieging the Xia state's capital, Zhongxing, and the news of the great leader's death was kept from the Mongol army until the city had capitulated and its inhabitants been slaughtered.",
+   'Medieval sources mention the tomb was in the vicinity of the sacred mountain Burkan Kuldun, and that his son Ogedei sacrificed 40 slave girls and 40 horses to accompany his father into the next life.']],
+ 'textrank_summary': [dict_items([('rouge2', Score(precision=0.08924485125858124, recall=0.6724137931034483, fmeasure=0.15757575757575756))]),
+  ['Genghis Khan (aka Chinggis Khan) was the founder of the Mongol Empire which he ruled from 1206 until his death in 1227.',
+   "Born Temujin, he acquired the title of Genghis Khan, likely meaning 'universal ruler’, after unifying the Mongol tribes.",
+   'Genghis Khan had a fearsome reputation but he was an able administrator who introduced writing to the Mongols, created their first law code, promoted trade and granted religious freedom by permitting all religions to be freely practised anywhere in the Mongol world.',
+   "Temujin's mother was called Hoelun and his father, Yisugei, who was a tribal leader, and he arranged for his son to marry Borte (aka Bortei), the daughter of another influential Mongol leader, Dei-secen, but before this plan could come to fruition, Temujin's father was poisoned by a rival.",
+   'As his army swelled to ever greater proportions, Temujin defeated, over a period of ten years or so, such rivals as the Tartars, Kereyids, Naimans, and Merkids until a Mongol confederation met at a great conference or kurultai at the Kerulen river in 1206 and formally declared Temujin their leader.',
+   "He was given the title of Genghis Khan which likely means 'universal' leader (the spelling in Mongol is Chinggis but 'Genghis' remains more familiar today and derives from medieval Arab scholars not having a ch in their language).",
+   'The Jin State Genghis attacked the Jin state (aka Jurchen Jin Dynasty, 1115-1234) and the plain of the Yellow River in 1205, 1209, and 1211, the latter invasion consisting of two Mongol armies of 50,000 men each.',
+   'Rather short-sightedly, the fourth player in this game of empires, the Chinese Song Dynasty (aka Sung, 960 - 1279), instead of allying with the Jin to create a useful buffer zone between themselves and the Mongols, allied with the Khan.',
+   "1193), who made the following description of the Great Khan, by then already a legendary figure: A man of a tall stature, of vigorous build, robust in body, the hair on his face scanty and turned white, with cat's eyes, possessed of great energy, discernment, genius and understanding, awe-inspiring, a butcher, just, resolute, an overthrower of enemies, intrepid, sanguinary and cruel' (Tabakat-i Nasiri, c. 1260, quoted in Saunders, 63) Genghis Khan died on 18 August 1227 of an unknown illness, perhaps initially caused by falling from his horse while hunting a few months earlier.",
+   "At the time, he was back in northwest China besieging the Xia state's capital, Zhongxing, and the news of the great leader's death was kept from the Mongol army until the city had capitulated and its inhabitants been slaughtered."]],
+ 'tfidf_summary': [dict_items([('rouge2', Score(precision=0.019305019305019305, recall=0.1724137931034483, fmeasure=0.034722222222222224))]),
+  ['Genghis Khan had a fearsome reputation but he was an able administrator who introduced writing to the Mongols, created their first law code, promoted trade and granted religious freedom by permitting all religions to be freely practised anywhere in the Mongol world.',
+   "Temujin's mother was called Hoelun and his father, Yisugei, who was a tribal leader, and he arranged for his son to marry Borte (aka Bortei), the daughter of another influential Mongol leader, Dei-secen, but before this plan could come to fruition, Temujin's father was poisoned by a rival.",
+   'Things then got even worse when the young Temujin was captured by a rival clan leader, perhaps following an incident where Temujin may have killed one of his older half-brothers, Bekter, who likely represented a rival branch of the family that had taken on the legacy of Yisugei.',
+   "Courageous himself in battle, Temujin would often reward bravery shown by the defeated, famously making a man called Jebe one of his generals because he had withstood a cavalry charge and fired an arrow that felled Temujin's own horse.",
+   'As his army swelled to ever greater proportions, Temujin defeated, over a period of ten years or so, such rivals as the Tartars, Kereyids, Naimans, and Merkids until a Mongol confederation met at a great conference or kurultai at the Kerulen river in 1206 and formally declared Temujin their leader.',
+   'The aim now was to combine this power base with the traditional Mongol skills of horsemanship and archery, and, not only overcome tradition rival neighbouring states but build an empire which then could conquer the richest state in Asia: China.',
+   'They not only brought ferocious mobility to Asian warfare but they were, thanks to their flexibility, quickly adept at other types of battle, too, like siege warfare and the use of gunpowder missiles and catapults (first Chinese ones and then those from Afghanistan were adopted when they realised they were superior).',
+   'Song China was now fully exposed from the north and weaker than ever, wracked as it was by internal political factions and hamstrung by an overly conservative foreign policy which meant that it was only a matter of time before the Mongols brought about its collapse, too.',
+   "1193), who made the following description of the Great Khan, by then already a legendary figure: A man of a tall stature, of vigorous build, robust in body, the hair on his face scanty and turned white, with cat's eyes, possessed of great energy, discernment, genius and understanding, awe-inspiring, a butcher, just, resolute, an overthrower of enemies, intrepid, sanguinary and cruel' (Tabakat-i Nasiri, c. 1260, quoted in Saunders, 63) Genghis Khan died on 18 August 1227 of an unknown illness, perhaps initially caused by falling from his horse while hunting a few months earlier.",
+   'The empire was to be divided amongst his sons Jochi, Chagatai (Chaghadai), Tolui (Tului), and Ogedei (Ogodei), with each ruling a khanate (although Jochi would predecease his father in 1227) and Ogedei, the third son, becoming the new Great Khan in 1229, a position he would maintain until his death in 1241.']]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Iberian-Conquest-of-the-Americas">
+<a class="anchor" href="#The-Iberian-Conquest-of-the-Americas" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Iberian Conquest of the Americas<a class="anchor-link" href="#The-Iberian-Conquest-of-the-Americas"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">'https://www.worldhistory.org/article/1920/the-iberian-conquest-of-the-americas/'</span>
+<span class="n">summaries</span> <span class="o">=</span> <span class="n">TextSummarization</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">[</span><span class="n">tfidf_summary</span><span class="p">,</span> <span class="n">lsa_summary</span><span class="p">,</span> <span class="n">textrank_summary</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">best_summary</span><span class="p">()</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">print_summary_detail</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>European explorers began to probe the Western Hemisphere in the early 1500s, and they found to their utter amazement not only a huge landmass but also a world filled with several diverse and populous indigenous cultures.
+Among their most important conquests were those of Christopher Columbus in the Caribbean (1492-1502); Hernán Cortés in Aztec Mexico (1519-1521), Francisco Pizzaro and Diego de Almagro in Inca Peru (1528-1532), and Juan de Grijalva (1518) and Hernán Cortés (1519; 1524-1525) in Mayan Yucatán and Guatemala.
+Following an earlier expedition through the Yucatán led by Juan de Grijalva, Hernán Cortés began his campaign against the Aztec Empire in 1519 and with his coalition army captured the emperor Cuauhtémoc and the capital of the Aztec Empire, Tenochtitlan in 1521.
+It began when Francisco Pizarro, with his Andean allies captured and strangled Emperor Atahualpa in 1532, but it did not end for another 40 years until the last Inca stronghold of Vilcabamba (1500 m northeast of Cuzco) was conquered in 1572.
+Following Cortés' conquest of the Aztec Empire, the Crown of Castile established the Kingdom of New Spain, which covered a huge area including what is now Mexico, much of the American Southwest in North America, Central America, northern parts of South America, and the Philippines.
+The Spanish enforced this system of stratification through three institutions: When soldiers first encountered the native peoples, they were supposed to read aloud in Spanish the requerimiento, which told the natives they had to submit to the authority of the Spanish crown or face the sword.
+Some have argued that haciendas evolved from the encomiendas, but in the haciendas system, land was granted to private individuals, but instead of the owners utilizing forced labor on these estates, free labor was recruited on a permanent or casual basis.
+Because of the failure of most of the captaincies and the continued menace of French ships along the coast, King John III of Portugal (r. 1521-1557) decided in 1549 that he would have to colonize Brazil as a royal enterprise.
+The Amerindians were confronted with an array of crops of which they had no experience and were left with insufficient time to grow their own crops while tending the fields of their masters or working in dank, dark mines.
+There were at least 60 million people in North, Central, and South America before the first European contact in 1492, and by the 1600s probably 56 million had died, 90% of the whole pre-Columbian indigenous population.
+
+Detail:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'lsa_summary': [dict_items([('rouge2', Score(precision=0.10434782608695652, recall=0.4044943820224719, fmeasure=0.16589861751152074))]),
+  ['European explorers began to probe the Western Hemisphere in the early 1500s, and they found to their utter amazement not only a huge landmass but also a world filled with several diverse and populous indigenous cultures.',
+   'The Amerindian farmers grew cassava, maize, potato, beans, squash, tomatoes, and chili peppers, while the Iberians cultivated wheat, barley, cabbage, onions, garlic, and carrots.',
+   "Instead, he established a settlement at La Isabela, in today's Dominican Republic, from which he explored the interior of the Island for gold and silver and imposed a brutal tribute system on the local Taínos.",
+   'It began when Francisco Pizarro, with his Andean allies captured and strangled Emperor Atahualpa in 1532, but it did not end for another 40 years until the last Inca stronghold of Vilcabamba (1500 m northeast of Cuzco) was conquered in 1572.',
+   'The Spaniards would supervise the land, run the mines, and staff the colonial administrations, and the Amerindians (la republica de los indios), would provide the labor to feed, house, and clothe the Spanish.',
+   'When some semblance of control was obtained, royal authorities then gave hereditary ownership of the native land to nobles and officers who, through the encomienda, received tribute and labor from the Indian villages.',
+   'The indigenous occupants were required to provide a tribute of anything the land proved to hold – gold, crops, foodstuffs, and animals, and they owed a portion of their time to work on plantations or in mines.',
+   'The widespread protest forced the crown to back down for a while, but in the early 1600s, the king replaced the encomienda with the repartimiento, where government officials (corregidor de indios) took over regulating the labor of the indigenous people.',
+   'Pernambuco, the most successful captaincy, belonged to Duarte Coelho, who founded the city of Olinda in 1536 and set up sugar factories and plantations, to satisfy the growing sweet tooth of Europe.',
+   'Tomé de Sousa also worked to repair the villages and reorganize the economies of the old captaincies and spread the Catholic faith among the indigenous people through the Jesuits, officially supported by the king.']],
+ 'textrank_summary': [dict_items([('rouge2', Score(precision=0.016172506738544475, recall=0.06741573033707865, fmeasure=0.02608695652173913))]),
+  ['Their empire was a confederation of three huge city-states established in 1427: Tenochtitlan, the capital located on an island near the western shore of Lake Texcoco in central Mexico, Texcoco in the central Mexican plateau, and Tlacopan in the Valley of Mexico on the western shore of Lake Texcoco.',
+   'Unlike the conquistadors in Spanish America who followed him, he made no large-scale conquest of the indigenous Taíno people.',
+   "Following Cortés' conquest of the Aztec Empire, the Crown of Castile established the Kingdom of New Spain, which covered a huge area including what is now Mexico, much of the American Southwest in North America, Central America, northern parts of South America, and the Philippines.",
+   'The Spanish enforced this system of stratification through three institutions: When soldiers first encountered the native peoples, they were supposed to read aloud in Spanish the requerimiento, which told the natives they had to submit to the authority of the Spanish crown or face the sword.',
+   'The Spanish crown passed laws to make it clear that the indigenous people were not meant to be slaves and were in fact Spanish subjects with certain rights, but these laws were met with great hostility and resistance.',
+   'The widespread protest forced the crown to back down for a while, but in the early 1600s, the king replaced the encomienda with the repartimiento, where government officials (corregidor de indios) took over regulating the labor of the indigenous people.',
+   'The captaincies were granted control over huge strips of land and all the indigenous people that resided upon it, much like the Spanish encomiendas.',
+   'Tomé de Sousa also worked to repair the villages and reorganize the economies of the old captaincies and spread the Catholic faith among the indigenous people through the Jesuits, officially supported by the king.',
+   'During the European colonization of the Americas, the Europeans did all they could to ignore the agricultural achievements of the Amerindians and set out to replace the indigenous agro-ecosystems with their own crops and methods.',
+   'There were at least 60 million people in North, Central, and South America before the first European contact in 1492, and by the 1600s probably 56 million had died, 90% of the whole pre-Columbian indigenous population.']],
+ 'tfidf_summary': [dict_items([('rouge2', Score(precision=0.20892018779342722, recall=1.0, fmeasure=0.34563106796116505))]),
+  ['European explorers began to probe the Western Hemisphere in the early 1500s, and they found to their utter amazement not only a huge landmass but also a world filled with several diverse and populous indigenous cultures.',
+   'Among their most important conquests were those of Christopher Columbus in the Caribbean (1492-1502); Hernán Cortés in Aztec Mexico (1519-1521), Francisco Pizzaro and Diego de Almagro in Inca Peru (1528-1532), and Juan de Grijalva (1518) and Hernán Cortés (1519; 1524-1525) in Mayan Yucatán and Guatemala.',
+   'Following an earlier expedition through the Yucatán led by Juan de Grijalva, Hernán Cortés began his campaign against the Aztec Empire in 1519 and with his coalition army captured the emperor Cuauhtémoc and the capital of the Aztec Empire, Tenochtitlan in 1521.',
+   'It began when Francisco Pizarro, with his Andean allies captured and strangled Emperor Atahualpa in 1532, but it did not end for another 40 years until the last Inca stronghold of Vilcabamba (1500 m northeast of Cuzco) was conquered in 1572.',
+   "Following Cortés' conquest of the Aztec Empire, the Crown of Castile established the Kingdom of New Spain, which covered a huge area including what is now Mexico, much of the American Southwest in North America, Central America, northern parts of South America, and the Philippines.",
+   'The Spanish enforced this system of stratification through three institutions: When soldiers first encountered the native peoples, they were supposed to read aloud in Spanish the requerimiento, which told the natives they had to submit to the authority of the Spanish crown or face the sword.',
+   'Some have argued that haciendas evolved from the encomiendas, but in the haciendas system, land was granted to private individuals, but instead of the owners utilizing forced labor on these estates, free labor was recruited on a permanent or casual basis.',
+   'Because of the failure of most of the captaincies and the continued menace of French ships along the coast, King John III of Portugal (r. 1521-1557) decided in 1549 that he would have to colonize Brazil as a royal enterprise.',
+   'The Amerindians were confronted with an array of crops of which they had no experience and were left with insufficient time to grow their own crops while tending the fields of their masters or working in dank, dark mines.',
+   'There were at least 60 million people in North, Central, and South America before the first European contact in 1492, and by the 1600s probably 56 million had died, 90% of the whole pre-Columbian indigenous population.']]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Christmas-Through-the-Ages">
+<a class="anchor" href="#Christmas-Through-the-Ages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Christmas Through the Ages<a class="anchor-link" href="#Christmas-Through-the-Ages"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">'https://www.worldhistory.org/article/1893/christmas-through-the-ages/'</span>
+<span class="n">summaries</span> <span class="o">=</span> <span class="n">TextSummarization</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">[</span><span class="n">tfidf_summary</span><span class="p">,</span> <span class="n">lsa_summary</span><span class="p">,</span> <span class="n">textrank_summary</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">best_summary</span><span class="p">()</span>
+<span class="n">summaries</span><span class="o">.</span><span class="n">print_summary_detail</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From gift-giving to the sumptuous spread of a Christmas dinner table, this article traces the history of the celebrations from Roman times to the Victorian era when our modern take on the holiday was firmly established in both deed and literature.
+Saturnalia was a week-long Roman festival held between the 17th and 23rd of December that honoured the agricultural god Saturn, nicely encompassing the winter solstice, another event of significance in the pagan calendar.
+For the rich, fine clothes and jewellery were the norm; for the less well-off, nicer food than usual, a bundle of firewood or simple wooden toys like spinning tops and dolls were eagerly anticipated.
+The tradition of giving gifts on the 1st January remained strong, and this included Elizabeth I of England herself, who regularly received jewels, extravagant dresses, and feather fans from her courtiers.
+With no public roads, travelling by horse and carriage was slow and uncomfortable; nevertheless, the more intrepid could visit sights like Francis Drake's Golden Hind ship in London, which had made the first English circumnavigation of the globe (1577 to 1580).
+The Victorians certainly ensured that such medieval elements as a Christmas morning church service, feasting, games, gifts, and pantomimes continued to enjoy their status as essential activities of the season.
+The young fir tree was decorated with candles and small presents (toys, sweets, charms, and candied fruit) hung from its boughs that were destined to be distributed to the Christmas guests who might have their name tagged to their gift.
+A more efficient postage system and the introduction of the Penny Black stamp in 1840 meant that correspondence increased and a tradition developed of sending friends and distant family a Christmas card, first introduced in England in 1843.
+The jolly figure with the long white beard who visits homes on Christmas Eve to leave good children presents has his origins in the 4th-century Saint Nicholas, Bishop of Myra in Anatolia who delighted in distributing gifts, including sacks of gold.
+Nowadays, electric lights may have replaced the candles on the tree, churches are not quite as busy as they used to be, the Yule log is now usually chocolate, and many of the cards have become electronic, but the traditions that have run through the centuries to celebrate Christmas Day continue each and every year to enchant and inspire as they have always done.
+
+Detail:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'lsa_summary': [dict_items([('rouge2', Score(precision=0.12090680100755667, recall=0.4752475247524752, fmeasure=0.19277108433734938))]),
+  ['From gift-giving to the sumptuous spread of a Christmas dinner table, this article traces the history of the celebrations from Roman times to the Victorian era when our modern take on the holiday was firmly established in both deed and literature.',
+   'Saturnalia was a week-long Roman festival held between the 17th and 23rd of December that honoured the agricultural god Saturn, nicely encompassing the winter solstice, another event of significance in the pagan calendar.',
+   'For the rich, fine clothes and jewellery were the norm; for the less well-off, nicer food than usual, a bundle of firewood or simple wooden toys like spinning tops and dolls were eagerly anticipated.',
+   'The tradition of giving gifts on the 1st January remained strong, and this included Elizabeth I of England herself, who regularly received jewels, extravagant dresses, and feather fans from her courtiers.',
+   "With no public roads, travelling by horse and carriage was slow and uncomfortable; nevertheless, the more intrepid could visit sights like Francis Drake's Golden Hind ship in London, which had made the first English circumnavigation of the globe (1577 to 1580).",
+   'The Victorians certainly ensured that such medieval elements as a Christmas morning church service, feasting, games, gifts, and pantomimes continued to enjoy their status as essential activities of the season.',
+   'The young fir tree was decorated with candles and small presents (toys, sweets, charms, and candied fruit) hung from its boughs that were destined to be distributed to the Christmas guests who might have their name tagged to their gift.',
+   'A more efficient postage system and the introduction of the Penny Black stamp in 1840 meant that correspondence increased and a tradition developed of sending friends and distant family a Christmas card, first introduced in England in 1843.',
+   'The jolly figure with the long white beard who visits homes on Christmas Eve to leave good children presents has his origins in the 4th-century Saint Nicholas, Bishop of Myra in Anatolia who delighted in distributing gifts, including sacks of gold.',
+   'Nowadays, electric lights may have replaced the candles on the tree, churches are not quite as busy as they used to be, the Yule log is now usually chocolate, and many of the cards have become electronic, but the traditions that have run through the centuries to celebrate Christmas Day continue each and every year to enchant and inspire as they have always done.']],
+ 'textrank_summary': [dict_items([('rouge2', Score(precision=0.044585987261146494, recall=0.13861386138613863, fmeasure=0.06746987951807229))]),
+  ['Several of the traditions today strongly associated with Christmas have a very long history indeed, even pre-dating the Christmas celebration itself.',
+   'Christmas itself was seriously threatened by the Puritans, those Christian extremists who preferred to fast on Christmas day.',
+   'The Victorians certainly ensured that such medieval elements as a Christmas morning church service, feasting, games, gifts, and pantomimes continued to enjoy their status as essential activities of the season.',
+   'Not the first royal to have a Christmas tree in England, nevertheless, from 1841, Prince Albert began a lasting tradition which soon spread from town squares to living rooms across the country, the idea being spread by popular illustrated magazines that revealed the private festivities of the royal family.',
+   'Presents were now given primarily on Christmas Day or Christmas Eve.',
+   'The greatest gift-giver at Christmas is, of course, Father Christmas.',
+   "Father Christmas was not only inspired by Saint Nicholas but he also incorporated elements of the 'Spirit of Christmas' of folklore, which explains his more jovial and spirit-loving side, a trait children hopefully appeal to by leaving him out an alcoholic drink of some sort on Christmas Eve.",
+   'There was, too, a change in timing, some families continued to eat a Christmas lunch, perhaps a little later than a normal one, while others ate a Christmas dinner in the evening.',
+   "Dickens' festive tale A Christmas Carol, with its story of the reformed miser Ebenezer Scrooge, has itself become a staple part of Christmas ever since its publication in 1843.",
+   'Nowadays, electric lights may have replaced the candles on the tree, churches are not quite as busy as they used to be, the Yule log is now usually chocolate, and many of the cards have become electronic, but the traditions that have run through the centuries to celebrate Christmas Day continue each and every year to enchant and inspire as they have always done.']],
+ 'tfidf_summary': [dict_items([('rouge2', Score(precision=0.023305084745762712, recall=0.10891089108910891, fmeasure=0.03839441535776614))]),
+  ['That parties everywhere could get out of hand is attested by records of watchmen being paid to ensure property was not damaged over the 12-day holiday, particularly the big parties held on the eve of the 6th of January, known as Twelfth Night.',
+   "The poor enjoyed more modest entertainment like cards and dice, carols, playing musical instruments, board games, telling folktales, and enjoying traditional party games like permitting one person to be the 'king of the feast' if they found a bean in the special bread or cake – everyone else then had to mimic the 'king' (a role-reversal game that echoed Saturnalia's similar 'Lord of Misrule').",
+   "During the Elizabethan Era (1558-1603 CE) 'holy days' continued to be the main source of public 'holidays' – a term now being used for the first time – but there were also more secular activities establishing themselves as popular traditions.",
+   "With no public roads, travelling by horse and carriage was slow and uncomfortable; nevertheless, the more intrepid could visit sights like Francis Drake's Golden Hind ship in London, which had made the first English circumnavigation of the globe (1577 to 1580).",
+   'The next leap forward in how Christmas was celebrated came during the reign of Queen Victoria from 1837 to 1901, a period which witnessed some significant new traditions that have since become a lasting part of the holiday season.',
+   'Not the first royal to have a Christmas tree in England, nevertheless, from 1841, Prince Albert began a lasting tradition which soon spread from town squares to living rooms across the country, the idea being spread by popular illustrated magazines that revealed the private festivities of the royal family.',
+   'The young fir tree was decorated with candles and small presents (toys, sweets, charms, and candied fruit) hung from its boughs that were destined to be distributed to the Christmas guests who might have their name tagged to their gift.',
+   'The jolly figure with the long white beard who visits homes on Christmas Eve to leave good children presents has his origins in the 4th-century Saint Nicholas, Bishop of Myra in Anatolia who delighted in distributing gifts, including sacks of gold.',
+   "Father Christmas was not only inspired by Saint Nicholas but he also incorporated elements of the 'Spirit of Christmas' of folklore, which explains his more jovial and spirit-loving side, a trait children hopefully appeal to by leaving him out an alcoholic drink of some sort on Christmas Eve.",
+   'Nowadays, electric lights may have replaced the candles on the tree, churches are not quite as busy as they used to be, the Yule log is now usually chocolate, and many of the cards have become electronic, but the traditions that have run through the centuries to celebrate Christmas Day continue each and every year to enchant and inspire as they have always done.']]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Conclusion">
+<a class="anchor" href="#Conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion<a class="anchor-link" href="#Conclusion"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>According to our experiments, not any single one of models can be the best model for any article. Therefore, it is worthwhile to test a bunch of different summarizer algorithms to choose the best one for our application.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="liwehappy/metastability"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/metastability/jupyter/machine%20learning/tf-idf/text%20summarization/rouge/lsa/textrank/2022/01/16/_12_10_Text_Summarization_For_WHEncyclopedia.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metastability/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/metastability/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/metastability/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A place to share knowledge and insight about nature.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/liwehappy" target="_blank" title="liwehappy"><svg class="svg-icon grey"><use xlink:href="/metastability/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/liwehappy" target="_blank" title="liwehappy"><svg class="svg-icon grey"><use xlink:href="/metastability/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
