@@ -13,14 +13,14 @@
 <link rel="canonical" href="https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html" />
 <meta property="og:url" content="https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html" />
 <meta property="og:site_name" content="metastability" />
-<meta property="og:image" content="https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg.png" />
+<meta property="og:image" content="https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-10-21T00:00:00-05:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg.png" />
+<meta property="twitter:image" content="https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg" />
 <meta property="twitter:title" content="Cyclists’ Safety Guide in NYC - Part One" />
 <script type="application/ld+json">
-{"url":"https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html","@type":"BlogPosting","headline":"Cyclists’ Safety Guide in NYC - Part One","dateModified":"2021-10-21T00:00:00-05:00","datePublished":"2021-10-21T00:00:00-05:00","image":"https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html"},"description":"Perform descriptive analytics to describe the dangerous ridership of cyclists in NYC.","@context":"https://schema.org"}</script>
+{"url":"https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html","@type":"BlogPosting","headline":"Cyclists’ Safety Guide in NYC - Part One","dateModified":"2021-10-21T00:00:00-05:00","datePublished":"2021-10-21T00:00:00-05:00","image":"https://liwehappy.github.io/metastability/images/NYC_cycling_protest.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://liwehappy.github.io/metastability/jupyter/altair/datda%20visualization/seaborn/matplotlib/2021/10/21/Safety-Analysis-for-Cyclists-Part-One.html"},"description":"Perform descriptive analytics to describe the dangerous ridership of cyclists in NYC.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/metastability/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://liwehappy.github.io/metastability/feed.xml" title="metastability" /><link rel="shortcut icon" type="image/x-icon" href="/metastability/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -1090,7 +1090,8 @@ memory usage: 402.4+ MB
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_bike_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'Bicycle_Counts.csv'</span><span class="p">,</span><span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse_show</span>
+<span class="n">df_bike_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'Bicycle_Counts.csv'</span><span class="p">,</span><span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df_bike_counts</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df_bike_counts</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">df_bike_counters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'Bicycle_Counters.csv'</span><span class="p">,</span><span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1321,6 +1322,9 @@ memory usage: 402.4+ MB
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
 <div class="input">
 
 <div class="inner_cell">
@@ -1337,6 +1341,7 @@ memory usage: 402.4+ MB
 </div>
 </div>
 
+    </details>
 </div>
     
 
